@@ -32,8 +32,7 @@ typedef struct linreg_dataset_t
 	
 	float learning_rate;
 	
-	volatile float cost_function;
-	float cost_function_prev;
+	float cost_function;
 } linreg_dataset_t;
 
 
