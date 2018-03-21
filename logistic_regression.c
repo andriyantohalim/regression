@@ -14,6 +14,8 @@ void set_learning_rate_log(struct logreg_dataset_t *a, float b)
 /* Perform logistic_regression */
 void logistic_regression(struct logreg_dataset_t *a, int sampledatasize)
 {
+	float loss_sum = 0;
+	
 	// Loop linear regression as many as sampledatasize
 	for (int i = 0; i < sampledatasize; i++)
 	{
@@ -23,7 +25,8 @@ void logistic_regression(struct logreg_dataset_t *a, int sampledatasize)
 		float hypothesis = 1/denom;
 			
 		// Calculate hypothesis error against actual output
-		float err_log = hypothesis - a->sys_output[i];  
+		float err_log = hypothesis - a->sys_output[i]; 
+		//~ printf ("%f\t%f\n", hypothesis, err_log); 
 		
 		// Gradient descent: update each parameters to minimize error
 		a->B0 = a->B0 - a->learning_rate * err_log;
@@ -31,10 +34,12 @@ void logistic_regression(struct logreg_dataset_t *a, int sampledatasize)
 		a->B2 = a->B2 - a->learning_rate * err_log * (a->feat2[i]);
 		a->B3 = a->B3 - a->learning_rate * err_log * (a->feat3[i]);
 	
-		// Calculate cost function in moving average mode (not as summation): -y*log(hyp) - (1-y)*log(1-hyp)
-		a->cost_function = a->cost_function_prev - (a->sys_output[i] * log(hypothesis) + (1 - a->sys_output[i]) * log(1 - hypothesis));
-		a->cost_function_prev = a->cost_function/2;  
+		// Calculate loss function of each sample and sum it up: -y*log(hyp) - (1-y)*log(1-hyp)
+		loss_sum += -(a->sys_output[i] * log(hypothesis) + (1 - a->sys_output[i]) * log(1 - hypothesis));	  
 	}
+	
+	// Compute cost function
+	a->cost_function = loss_sum/sampledatasize;
 }
 
 
