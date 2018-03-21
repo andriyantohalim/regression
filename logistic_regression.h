@@ -34,8 +34,7 @@ typedef struct logreg_dataset_t
 
 	float learning_rate;
 	
-	volatile float cost_function;
-	float cost_function_prev;
+	float cost_function;
 } logreg_dataset_t;
 
 
